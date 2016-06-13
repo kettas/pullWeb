@@ -27,12 +27,15 @@ import cn.kettas.pull.FileUtils;
 public class ScriptApplication {
 	static String codeType="GB2312";
 	
-	private static String genHtml(List<Bean> item,String proDir,String url,String codeType,boolean deep,String fileName) throws Exception{
+	private static String genHtml(List<Bean> item,String proDir,String codeType,boolean deep) throws Exception{
 		Map linkTemp=new HashMap();
 		for(int i=0;item!=null&&i<item.size();i++){
 			Bean b=item.get(i);
-			linkTemp.put(b.getLink(), fileName);
-			getHtml("C:\\Users\\Administrator\\Desktop\\pull\\"+b.getDirName(),url,codeType,deep,fileName,linkTemp);
+			linkTemp.put(b.getLink(), b.getSaveFileName());
+		}
+		for(int i=0;item!=null&&i<item.size();i++){
+			Bean b=item.get(i);
+			getHtml("C:\\Users\\Administrator\\Desktop\\pull\\"+b.getDirName(),b.getLink(),codeType,deep,b.getSaveFileName(),linkTemp);
 		}
 		return null;
 	}
@@ -91,15 +94,6 @@ public class ScriptApplication {
 				}
 			}
 		}
-		linkMap.put("/h.asp", "HTML 系列教程.html");
-		linkMap.put("/b.asp", "../JavaScript/浏览器脚本.html");
-		linkMap.put("/s.asp", "../Server Side/index.html");
-		linkMap.put("/d.asp", "ASP.NET 教程.html");
-		linkMap.put("/x.asp", "XML 系列教程.html");
-		linkMap.put("/ws.asp", "Web Services 系列教程.html");
-		linkMap.put("/w.asp", "建站手册.html");
-		linkMap.put("/a.asp", "../Server Side/index.html");
-		linkMap.put("/sql/index.asp", "../Server Side/sql_index.html");
 		for(int k=0;list!=null&&k<list.size();k++){
 			Element e2=(Element)list.get(k);
 			List a=e2.select("a");
@@ -108,7 +102,7 @@ public class ScriptApplication {
 				String href=e.text();
 				String text=href.indexOf("<")>-1?StringEscapeUtils.escapeHtml(href):href;
 				String targetFile=linkMap.containsKey(href)?linkMap.get(href).toString():text+".html";
-				System.err.println(targetFile);
+				System.err.println(href+"\t"+targetFile);
 				String src=e.absUrl("href");
 				e.attr("href",targetFile);
 				if(deep){
@@ -149,28 +143,25 @@ public class ScriptApplication {
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		List<Bean> item=new ArrayList<Bean>();
-		item.add(new Bean("JavaScript","http://www.w3school.com.cn/b.asp","index.html"));
-		item.add(new Bean("JavaScript","http://www.w3school.com.cn/js/index.asp","JavaScript.html"));
-		
-		item.add(new Bean("HTML DOM","http://www.w3school.com.cn/htmldom/index.asp","HTML DOM.html"));
-		item.add(new Bean("HTML DOM","http://www.w3school.com.cn/jsref/index.asp","DOM 参考.html"));
-		
-		item.add(new Bean("jQuery","http://www.w3school.com.cn/jquery/index.asp","jQuery.html"));
-		item.add(new Bean("AJAX","http://www.w3school.com.cn/ajax/index.asp", "AJAX.html"));
-		item.add(new Bean("JSON","http://www.w3school.com.cn/json/index.asp", "JSON.html"));
-		item.add(new Bean("css","http://www.w3school.com.cn/css/index.asp", "css.html"));
-		item.add(new Bean("css3","http://www.w3school.com.cn/css3/index.asp", "css.html"));
-		item.add(new Bean("html5","http://www.w3school.com.cn/html5/index.asp", "index.html"));
-		item.add(new Bean("xml","http://www.w3school.com.cn/xml/index.asp", "index.html"));
-		item.add(new Bean("xpath","http://www.w3school.com.cn/xpath/index.asp", "index.html"));
+//		item.add(new Bean("JavaScript","http://www.w3school.com.cn/b.asp","index.html"));
+//		item.add(new Bean("JavaScript","http://www.w3school.com.cn/js/index.asp","JavaScript.html"));
+//		
+//		item.add(new Bean("HTML DOM","http://www.w3school.com.cn/htmldom/index.asp","HTML DOM.html"));
+//		item.add(new Bean("HTML DOM","http://www.w3school.com.cn/jsref/index.asp","DOM 参考.html"));
+//		
+//		item.add(new Bean("jQuery","http://www.w3school.com.cn/jquery/index.asp","jQuery.html"));
+//		item.add(new Bean("AJAX","http://www.w3school.com.cn/ajax/index.asp", "AJAX.html"));
+//		item.add(new Bean("JSON","http://www.w3school.com.cn/json/index.asp", "JSON.html"));
+//		item.add(new Bean("css","http://www.w3school.com.cn/css/index.asp", "css.html"));
+//		item.add(new Bean("css3","http://www.w3school.com.cn/css3/index.asp", "css.html"));
+//		item.add(new Bean("html5","http://www.w3school.com.cn/html5/index.asp", "index.html"));
+//		item.add(new Bean("xml","http://www.w3school.com.cn/xml/index.asp", "index.html"));
+//		item.add(new Bean("xpath","http://www.w3school.com.cn/xpath/index.asp", "index.html"));
 		item.add(new Bean("xsl","http://www.w3school.com.cn/xsl/index.asp", "index.html"));
 		
 		item.add(new Bean("Server Side","http://www.w3school.com.cn/s.asp", "index.html"));
 		item.add(new Bean("Server Side","http://www.w3school.com.cn/sql/index.asp", "sql_index.html"));
-		for(int i=0;item!=null&&i<item.size();i++){
-			Bean b=item.get(i);
-			genHtml(item,"C:\\Users\\Administrator\\Desktop\\pull\\"+b.getDirName(),b.getLink(), codeType,true,b.getSaveFileName());
-		}
+		genHtml(item,"C:\\Users\\Administrator\\Desktop\\pull\\", codeType,true);
 	}
 
 }
