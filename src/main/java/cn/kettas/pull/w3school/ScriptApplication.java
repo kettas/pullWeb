@@ -20,6 +20,7 @@ import org.jsoup.nodes.Element;
 import com.mysql.jdbc.log.Log;
 
 import cn.kettas.pull.FileUtils;
+import cn.kettas.pull.HZPY;
 
 /**
  * http://www.w3school.com.cn/js/index.asp
@@ -80,6 +81,9 @@ public class ScriptApplication {
 		while(srcHref.indexOf("/")>-1){
 			srcHref=srcHref.replaceAll("/", "╱");
 		}
+		while(srcHref.indexOf("?")>-1){
+			srcHref=srcHref.replaceAll("?", "╱");
+		}
 		while(srcHref.indexOf("\\")>-1){
 			srcHref=srcHref.replaceAll("\\", "﹨");
 		}
@@ -88,6 +92,14 @@ public class ScriptApplication {
 		}
 		while(srcHref.indexOf(">")>-1){
 			srcHref=srcHref.replaceAll(">", "＞");
+		}
+		while(srcHref.indexOf(" ")>-1){
+			srcHref=srcHref.replaceAll(" ", "");
+		}
+		try {
+			return HZPY.toPingYin2(srcHref);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return srcHref;
 	}
@@ -112,7 +124,7 @@ public class ScriptApplication {
 			e.attr("href","../"+tmp[tmp.length-1]);
 		}
 		jd.select("script").remove();
-		list=jd.select("#course ul");
+		list=jd.select("#navsecond ul");
 		//缓存地址
 		for(int k=0;list!=null&&k<list.size();k++){
 			Element e2=(Element)list.get(k);
@@ -142,7 +154,7 @@ public class ScriptApplication {
 				e.attr("href",targetFile);
 			}
 		}
-		list=jd.select("#course a");
+		list=jd.select("#navsecond a");
 		for(int k=0;list!=null&&k<list.size();k++){
 			Element e=(Element)list.get(k);
 			String href=e.text();
@@ -150,7 +162,7 @@ public class ScriptApplication {
 			String targetFile=linkMap.containsKey(href)?linkMap.get(href).toString():text+".html";
 			String src=e.absUrl("href");
 			e.attr("href",targetFile);
-			if(deepTime<2&&!url.equals(e.absUrl("href2"))){
+			if(deepTime<4&&!url.equals(e.absUrl("href2"))){
 				getHtml(proDir,e.absUrl("href2"), codeType, deepTime+1,targetFile,linkMap);
 			}
 		}
@@ -191,13 +203,14 @@ public class ScriptApplication {
 		List<Bean> item=new ArrayList<Bean>();
 		item.add(new Bean("Html","http://www.w3school.com.cn/h.asp","index.html"));
 		item.add(new Bean("JavaScript","http://www.w3school.com.cn/b.asp","index.html"));
+//		item.add(new Bean("JavaScript","http://www.w3school.com.cn/jquerymobile/index.asp","jquery_index.html"));
 		item.add(new Bean("Server Side","http://www.w3school.com.cn/s.asp","index.html"));
 		
 		item.add(new Bean("ASP.NET","http://www.w3school.com.cn/d.asp","index.html"));
 		item.add(new Bean("XML","http://www.w3school.com.cn/x.asp", "index.html"));
 		item.add(new Bean("Web Services","http://www.w3school.com.cn/ws.asp", "index.html"));
 		item.add(new Bean("Web Building","http://www.w3school.com.cn/w.asp", "index.html"));
-		item.add(new Bean("","http://www.w3school.com.cn", "index.html"));
+//		item.add(new Bean("","http://www.w3school.com.cn", "index.html"));
 		
 //		item.add(new Bean("jQuery","http://www.w3school.com.cn/jquery/index.asp","jQuery.html"));
 //		item.add(new Bean("AJAX","http://www.w3school.com.cn/ajax/index.asp", "AJAX.html"));
