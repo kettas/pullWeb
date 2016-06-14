@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.dbutils.DbUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -77,6 +78,19 @@ public class ScriptApplication {
 		}
 		return doc;
 	}
+	public static String clearHTMLToString(String args,boolean replaceNull){
+		if(StringUtils.isEmpty(args)){
+			return "";
+		}
+		//args= args.replaceAll("(?is)<(.*?)>","");
+		if(replaceNull){
+			args = args.replaceAll("\\s*|\t|\r|\n","");
+		}
+		if(args.indexOf("&nbsp;")>-1){
+			args=args.replace("&nbsp;", " ");
+		}
+		return args;
+	}
 	private static String formateHref(String srcHref){
 		while(srcHref.indexOf("/")>-1){
 			srcHref=srcHref.replaceAll("/", "╱");
@@ -97,7 +111,7 @@ public class ScriptApplication {
 			srcHref=srcHref.replaceAll(" ", "");
 		}
 		try {
-			return HZPY.toPingYin2(srcHref);
+			return clearHTMLToString(srcHref,true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
